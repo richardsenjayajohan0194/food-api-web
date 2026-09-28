@@ -10,7 +10,7 @@ export default function RootLayout() {
         <AuthProvider>
             <SidebarProvider>
                 <AppSidebar/>
-                <main className="flex-1 p-4 ">
+                <main className="flex-1 pr-3">
                     <SidebarTrigger/>
                     <Outlet/>
                 </main>
