@@ -12,3 +12,4 @@ Tech stack yang digunakan untuk membangun aplikasi frontend:
 | **Axios**                | HTTP Client             | Digunakan untuk melakukan komunikasi HTTP dengan backend API.                                                 |
 | **TanStack React Query** | Server State Management | Mengelola data dari API seperti fetching, caching, refetching, mutation, loading, dan error state.            |
 | **GitHub Pages**         | Deployment              | Digunakan untuk melakukan hosting aplikasi frontend secara gratis melalui GitHub.                             |
+| **OpenAI GPT**           | AI assistance           | Digunakan untuk membantu coding, debugging, code explanation, dan problem solving                             |
