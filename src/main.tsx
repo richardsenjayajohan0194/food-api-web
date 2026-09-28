@@ -4,13 +4,17 @@ import './index.css'
 import App from './App.tsx'
 import QueryProvider from './providers/query-client.tsx'
 import { TooltipProvider } from './components/ui/tooltip.tsx'
+import { BrowserRouter } from 'react-router-dom'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <QueryProvider>
-      <TooltipProvider>
+    <BrowserRouter basename="/food-api-web/">
+      <QueryProvider>
+        <TooltipProvider>
           <App />
-      </TooltipProvider>
+        </TooltipProvider>
     </QueryProvider>
+    </BrowserRouter>
   </StrictMode>,
 )
+
