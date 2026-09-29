@@ -18,6 +18,7 @@ import { Search } from "lucide-react";
 import type { Order, SortBy } from "../../../types/food";
 import { useEffect, useState, memo } from "react";
 
+
 const itemsSortBy = [
     { label: "Id", value: "id" },
     { label: "Created_at", value: "created_at" },
@@ -31,7 +32,7 @@ const itemsOrder = [
     { label: "Desc", value: "desc" },
 ];
 
-const FoodMenuToolbar = memo(function FoodMenuToolbar({
+const FoodMenuToolbar = memo(({
     search,
     sortBy,
     order,
@@ -45,7 +46,7 @@ const FoodMenuToolbar = memo(function FoodMenuToolbar({
     onSearchChange: (search: string) => void;
     onSortByChange: (sortBy: SortBy) => void;
     onOrderChange: (order: Order) => void;
-}) {
+}) => {
     const [localSearch, setLocalSearch] = useState(search);
 
     useEffect(() => {

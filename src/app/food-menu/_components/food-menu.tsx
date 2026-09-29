@@ -2,11 +2,12 @@
 
 import { useCallback, useState } from "react";
 import { getFoodMenu } from "../../../features/food-menu/actions";
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import FoodMenuTable from "./food-menu-table";
 import type { FoodSearchParams, Order, SortBy } from "../../../types/food";
 import FoodMenuToolbar from "./food-menu-toolbar";
+import FoodMenuPagination from "./food-menu-pagination";
 
 export default function FoodMenu() {
     const [searchParams, setSearchParams] = useState<FoodSearchParams>({
@@ -79,11 +80,15 @@ export default function FoodMenu() {
     const {
         data,
         isLoading,
-
+        isFetching,
     } = useQuery({
         queryKey: ['Foods', searchParams],
         queryFn: () => getFoodMenu(searchParams),
+        placeholderData: keepPreviousData,
     })
+
+    const totalData = data?.data.totalData ?? 0;
+    const totalPages = data?.totalPages ?? 0;
 
     return (
         <div className="flex grow flex-col justify-center items-center gap-3">
@@ -95,14 +100,24 @@ export default function FoodMenu() {
                 onSortByChange={handleSortByChange}
                 onOrderChange={handleOrderChange}
             />
-            <FoodMenuTable
-                foods={data}
-                isLoading={isLoading} 
-                page={searchParams.page} 
-                limit={searchParams.limit}
-                onPageChange={handlePageChange}
-                onLimitChange={handleLimitChange}
-            />
+            <div className="w-full rounded-sm bg-white p-2">
+                <FoodMenuTable
+                    foods={data}
+                    isLoading={isLoading}
+                    isFetching={isFetching}
+                    limit={searchParams.limit}
+                />
+
+                <hr className="border-b bg-taupe-50" />
+                {data && !isFetching ? (<FoodMenuPagination
+                    totalData={totalData}
+                    totalPages={totalPages}
+                    page={searchParams.page}
+                    limit={searchParams.limit}
+                    onPageChange={handlePageChange}
+                    onLimitChange={handleLimitChange}
+                />) : null}
+            </div>
         </div>
     );
 
