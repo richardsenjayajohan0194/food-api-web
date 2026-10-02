@@ -1,8 +1,8 @@
-import { Skeleton } from "../../../components/ui/skeleton";
+import { Skeleton } from "../../../../components/ui/skeleton";
 import {
     TableCell,
     TableRow,
-} from "../../../components/ui/table";
+} from "../../../../components/ui/table";
 
 export function FoodTableSkeleton({
     value,

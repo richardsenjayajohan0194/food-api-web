@@ -9,7 +9,7 @@ import {
     useQueryClient,
 } from "@tanstack/react-query";
 
-import { Button } from "../../../components/ui/button";
+import { Button } from "../../../../components/ui/button";
 import {
     Dialog,
     DialogClose,
@@ -18,11 +18,11 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "../../../components/ui/dialog";
-import { Field, FieldGroup } from "../../../components/ui/field";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
-import { Textarea } from "../../../components/ui/textarea";
+} from "../../../../components/ui/dialog";
+import { Field, FieldGroup } from "../../../../components/ui/field";
+import { Input } from "../../../../components/ui/input";
+import { Label } from "../../../../components/ui/label";
+import { Textarea } from "../../../../components/ui/textarea";
 
 import {
     NumberField,
@@ -31,11 +31,11 @@ import {
     NumberFieldIncrement,
     NumberFieldInput,
     NumberFieldScrubArea,
-} from "../../../components/reui/number-field";
+} from "../../../../components/reui/number-field";
 
-import { useCurrentUser } from "../../../hooks/use-current-user";
-import { createFoodMenu } from "../../../features/food-menu/actions";
-import type { Food } from "../../../types/food";
+import { useCurrentUser } from "../../../../hooks/use-current-user";
+import { createFoodMenu } from "../../../../features/food-menu/actions";
+import type { Food } from "../../../../types/food";
 
 export function FoodMenuDialog() {
     const user = useCurrentUser();
@@ -61,12 +61,10 @@ export function FoodMenuDialog() {
 
             setOpen(false);
 
-            // Refetch / invalidate the food menu query
             await queryClient.invalidateQueries({
                 queryKey: ["Foods"],
             });
 
-            // Reset form
             setFoodMenu({
                 name: "",
                 description: "",
@@ -103,40 +101,15 @@ export function FoodMenuDialog() {
         createFoodMenuMutation.mutate(payload);
     };
 
-    const handleNumberChange = (value: number) => {
-        const newValue = Math.min(
-            100,
-            Math.max(0, value)
-        );
-
-        setFoodMenu((prev) => ({
-            ...prev,
-            number: newValue,
-        }));
-    };
-
-    const handleNumberInputChange = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        const value = Number(event.target.value);
-
-        if (Number.isNaN(value)) {
+    const handleNumberChange = (value: number | null) => {
+        if (value === null) {
             return;
         }
 
-        handleNumberChange(value);
-    };
-
-    const handleIncrement = () => {
-        handleNumberChange(
-            foodMenu.number + 1
-        );
-    };
-
-    const handleDecrement = () => {
-        handleNumberChange(
-            foodMenu.number - 1
-        );
+        setFoodMenu((prev) => ({
+            ...prev,
+            number: Math.max(1, value),
+        }));
     };
 
     return (
@@ -181,44 +154,32 @@ export function FoodMenuDialog() {
 
                             <NumberField
                                 className="gap-y-[12px] max-w-[150px]"
+                                value={foodMenu.number}
+                                onValueChange={handleNumberChange}
                                 min={1}
-                                max={100}
+                                step={1}
                             >
                                 <NumberFieldScrubArea label="Number / Qty" />
 
-                                <NumberFieldGroup className="h-9 rounded-md">
+                                <NumberFieldGroup className="rounded-md">
                                     <NumberFieldInput
                                         id="number"
-                                        className="text-start"
-                                        value={
-                                            foodMenu.number
-                                        }
-                                        onChange={
-                                            handleNumberInputChange
-                                        }
+                                        className="text-left"
                                     />
+                    
+                                    <NumberFieldIncrement
+                                        type="button"
+                                        className="rounded-none!"
+                                    >
+                                        <ChevronUpIcon className="size-3.5" />
+                                    </NumberFieldIncrement>
 
-                                    <div className="border-input bg-muted/30 rounded-lg m-px flex shrink-0 flex-col overflow-hidden border">
-                                        <NumberFieldIncrement
-                                            type="button"
-                                            className="border-input hover:bg-accent focus-visible:bg-accent flex h-3.5 w-full flex-1 shrink-0 items-center rounded-none! border-b px-1.5 leading-none"
-                                            onClick={
-                                                handleIncrement
-                                            }
-                                        >
-                                            <ChevronUpIcon className="size-3.5" />
-                                        </NumberFieldIncrement>
-
-                                        <NumberFieldDecrement
-                                            type="button"
-                                            className="hover:bg-accent focus-visible:bg-accent flex h-3.5 w-full flex-1 shrink-0 items-center rounded-none! px-1.5 leading-none"
-                                            onClick={
-                                                handleDecrement
-                                            }
-                                        >
-                                            <ChevronDownIcon className="size-3.5" />
-                                        </NumberFieldDecrement>
-                                    </div>
+                                    <NumberFieldDecrement
+                                        type="button"
+                                        className="rounded-none!"
+                                    >
+                                        <ChevronDownIcon className="size-3.5" />
+                                    </NumberFieldDecrement>
                                 </NumberFieldGroup>
                             </NumberField>
                         </div>
@@ -231,9 +192,7 @@ export function FoodMenuDialog() {
                             <Textarea
                                 className="rounded-md h-40"
                                 placeholder="Type your description here."
-                                value={
-                                    foodMenu.description
-                                }
+                                value={foodMenu.description}
                                 onChange={(e) =>
                                     setFoodMenu(
                                         (prev) => ({
@@ -275,3 +234,4 @@ export function FoodMenuDialog() {
         </Dialog>
     );
 }
+

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { AuthContext } from "../auth/auth-context";
-import { mockUser } from "../auth/auth-mock";
+import type { User } from "../types/auth";
 
 type AuthProviderProps = {
     children: ReactNode;
@@ -9,7 +9,9 @@ type AuthProviderProps = {
 export function AuthProvider({
     children,
 }: AuthProviderProps) {
-    const user = mockUser;
+    const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+    const storedUser = localStorage.getItem("User");
+    const user = isAuthenticated && storedUser ? (JSON.parse(storedUser) as User) : null;
 
     return (
         <AuthContext.Provider value={{ user }}>

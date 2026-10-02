@@ -1,4 +1,4 @@
-
+import { ToastContainer } from "react-toastify";
 import FoodMenu from "./_components/food-menu";
 import { FoodMenuDialog } from "./_components/food-menu-dialog";
 
@@ -15,6 +15,7 @@ export default function FoodMenuPage() {
             <section id="content" className="flex">
                 <FoodMenu/>
             </section>
+            <ToastContainer/>
         </div>
     );
 }

@@ -1,9 +1,18 @@
-import { Link, useLocation } from "react-router-dom";
-import { Utensils, Settings, ChefHat } from "lucide-react";
+import React from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Utensils,
+  Settings,
+  ChefHat,
+  LogOut,
+  CircleUser,
+  LogIn,
+} from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarHeader,
   SidebarMenu,
@@ -11,8 +20,9 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 
-import { cn } from '../../lib/utils';
-import React from "react";
+import { capitalizeFirstWord, cn } from "../../lib/utils";
+import { useCurrentUser } from "../../hooks/use-current-user";
+import type { User } from "../../types/auth";
 
 const sidebarItems = [
   {
@@ -27,24 +37,42 @@ const sidebarItems = [
   },
 ];
 
- const AppSidebar = React.memo(function AppSidebar() {
+const AppSidebar = React.memo(function AppSidebar() {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const user = useCurrentUser();
 
-  const pathname = useLocation().pathname;
+  function handleClick(user: User | null) {
+    if (user?.name) {
+      localStorage.removeItem("isAuthenticated");
+      localStorage.removeItem("User");
+    }
+    navigate("/", {
+      replace: true,
+    });
+  }
+
   console.log("render sidebar");
+
   return (
     <Sidebar collapsible="icon" variant="floating">
-      <SidebarHeader className="gap-2 flex-row items-center">
+      {/* Header */}
+      <SidebarHeader className="gap-2">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <div className="flex gap-2 justify-start items-center">
-                <ChefHat className="text-primary size-5!"/>
-                <h1 className="text-2xl font-bold text-primary">Gusto</h1>
+              <div className="flex items-center justify-start gap-2">
+                <ChefHat className="size-5! text-primary" />
+                <h1 className="text-2xl font-bold text-primary">
+                  Gusto
+                </h1>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
+
+      {/* Navigation */}
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
@@ -54,11 +82,15 @@ const sidebarItems = [
                   asChild
                   tooltip={item.label}
                   className={cn(
-                    'py-6 px-5 text-md mb-1',
-                    pathname === item.href && 'bg-primary text-primary-foreground font-semibold hover:bg-primary hover:text-primary-foreground'
+                    "mb-1 px-5 py-6 text-md",
+                    pathname === item.href &&
+                      "bg-primary font-semibold text-primary-foreground hover:bg-primary hover:text-primary-foreground"
                   )}
                 >
-                  <Link className="flex justify-start items-center gap-2" to={item.href}>
+                  <Link
+                    to={item.href}
+                    className="flex items-center justify-start gap-2"
+                  >
                     {item.icon}
                     <span>{item.label}</span>
                   </Link>
@@ -68,6 +100,60 @@ const sidebarItems = [
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+
+      {/* Footer */}
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <div
+              className="
+                flex w-full items-center gap-1
+                group-data-[collapsible=icon]:flex-col
+              "
+            >
+              {/* User */}
+              <SidebarMenuButton
+                tooltip={capitalizeFirstWord(user?.name ?? "User")}
+                className="
+                  min-w-0 flex-1 px-3
+                  group-data-[collapsible=icon]:size-10
+                  group-data-[collapsible=icon]:flex-none
+                  group-data-[collapsible=icon]:justify-center
+                  group-data-[collapsible=icon]:px-0
+                "
+              >
+                <CircleUser className="size-5 shrink-0" />
+
+                <span
+                  className="
+                    truncate
+                    group-data-[collapsible=icon]:hidden
+                  "
+                >
+                  {capitalizeFirstWord(user?.name ?? "User")}
+                </span>
+              </SidebarMenuButton>
+
+              {/* Logout */}
+              <SidebarMenuButton
+                type="button"
+                tooltip="Logout"
+                onClick={() => handleClick(user)}
+                className="
+                  size-10 shrink-0 justify-center
+                  text-muted-foreground
+                  hover:bg-destructive
+                  hover:text-destructive-foreground
+                  group-data-[collapsible=icon]:flex-none
+                "
+              >
+                {user === null ? <LogIn className="size-5" /> : <LogOut className="size-5" />}
+                <span className="sr-only">Logout</span>
+              </SidebarMenuButton>
+            </div>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 });

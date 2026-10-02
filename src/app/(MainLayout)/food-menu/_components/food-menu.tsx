@@ -1,26 +1,32 @@
 'use client';
 
 import { useCallback, useState } from "react";
-import { getFoodMenu } from "../../../features/food-menu/actions";
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { getFoodMenu } from "../../../../features/food-menu/actions";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import FoodMenuTable from "./food-menu-table";
-import type { FoodSearchParams, Order, SortBy } from "../../../types/food";
+import type {
+    FoodSearchParams,
+    Order,
+    SortBy,
+} from "../../../../types/food";
+
 import FoodMenuToolbar from "./food-menu-toolbar";
 import FoodMenuPagination from "./food-menu-pagination";
 
 export default function FoodMenu() {
-    const [searchParams, setSearchParams] = useState<FoodSearchParams>({
-        page: 1,
-        limit: 10,
-        search: '',
-        sortBy: 'created_at',
-        order: 'desc',
-    });
+    const [searchParams, setSearchParams] =
+        useState<FoodSearchParams>({
+            page: 1,
+            limit: 10,
+            search: "",
+            sortBy: "created_at",
+            order: "desc",
+        });
 
     const updateSearchParams = useCallback(
         (params: Partial<FoodSearchParams>) => {
-            setSearchParams(prev => ({
+            setSearchParams((prev) => ({
                 ...prev,
                 ...params,
             }));
@@ -82,16 +88,17 @@ export default function FoodMenu() {
         isLoading,
         isFetching,
     } = useQuery({
-        queryKey: ['Foods', searchParams],
+        queryKey: ["Foods", searchParams],
         queryFn: () => getFoodMenu(searchParams),
         placeholderData: keepPreviousData,
-    })
+    });
 
     const totalData = data?.data.totalData ?? 0;
     const totalPages = data?.totalPages ?? 0;
 
     return (
-        <div className="flex grow flex-col justify-center items-center gap-3">
+        <div className="flex min-w-0 w-full flex-1 flex-col gap-3 p-3">
+            {/* Toolbar */}
             <FoodMenuToolbar
                 search={searchParams.search}
                 sortBy={searchParams.sortBy}
@@ -100,7 +107,10 @@ export default function FoodMenu() {
                 onSortByChange={handleSortByChange}
                 onOrderChange={handleOrderChange}
             />
-            <div className="w-full rounded-sm bg-white p-2">
+
+            {/* Main content */}
+            <div className="flex min-w-0 w-full flex-1 flex-col rounded-md bg-white p-2">
+                {/* Table */}
                 <FoodMenuTable
                     foods={data}
                     isLoading={isLoading}
@@ -109,17 +119,19 @@ export default function FoodMenu() {
                 />
 
                 <hr className="border-b bg-taupe-50" />
-                {data && !isFetching ? (<FoodMenuPagination
-                    totalData={totalData}
-                    totalPages={totalPages}
-                    page={searchParams.page}
-                    limit={searchParams.limit}
-                    onPageChange={handlePageChange}
-                    onLimitChange={handleLimitChange}
-                />) : null}
+
+                {/* Pagination */}
+                {data && !isFetching ? (
+                    <FoodMenuPagination
+                        totalData={totalData}
+                        totalPages={totalPages}
+                        page={searchParams.page}
+                        limit={searchParams.limit}
+                        onPageChange={handlePageChange}
+                        onLimitChange={handleLimitChange}
+                    />
+                ) : null}
             </div>
         </div>
     );
-
 }
-

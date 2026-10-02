@@ -2,7 +2,7 @@ import {
     InputGroup,
     InputGroupAddon,
     InputGroupInput,
-} from "../../../components/ui/input-group";
+} from "../../../../components/ui/input-group";
 
 import {
     Select,
@@ -12,12 +12,11 @@ import {
     SelectLabel,
     SelectTrigger,
     SelectValue,
-} from "../../../components/ui/select";
+} from "../../../../components/ui/select";
 
 import { Search } from "lucide-react";
-import type { Order, SortBy } from "../../../types/food";
+import type { Order, SortBy } from "../../../../types/food";
 import { useEffect, useState, memo } from "react";
-
 
 const itemsSortBy = [
     { label: "Id", value: "id" },
@@ -60,8 +59,10 @@ const FoodMenuToolbar = memo(({
     }, [localSearch, search, onSearchChange]);
 
     return (
-        <div className="flex w-full items-center justify-between gap-3 rounded-md bg-white p-8">
-            <div className="flex items-center justify-center gap-2">
+        <div className="flex min-w-0 w-full flex-col gap-3 rounded-md bg-white p-4 sm:p-6 lg:flex-row lg:items-center lg:justify-between lg:p-8">
+
+            {/* Select controls */}
+            <div className="grid w-full min-w-0 grid-cols-2 gap-2 lg:flex lg:w-auto lg:shrink-0">
 
                 {/* Sort By */}
                 <Select
@@ -70,7 +71,7 @@ const FoodMenuToolbar = memo(({
                         onSortByChange(value as SortBy);
                     }}
                 >
-                    <SelectTrigger className="w-48 rounded-md">
+                    <SelectTrigger className="w-full min-w-0 rounded-md lg:w-48">
                         <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
 
@@ -98,7 +99,7 @@ const FoodMenuToolbar = memo(({
                         onOrderChange(value as Order);
                     }}
                 >
-                    <SelectTrigger className="w-48 rounded-md">
+                    <SelectTrigger className="w-full min-w-0 rounded-md lg:w-48">
                         <SelectValue placeholder="Order" />
                     </SelectTrigger>
 
@@ -121,7 +122,7 @@ const FoodMenuToolbar = memo(({
             </div>
 
             {/* Search */}
-            <InputGroup className="max-w-xs rounded-md">
+            <InputGroup className="w-full min-w-0 lg:max-w-xs">
                 <InputGroupInput
                     placeholder="Search..."
                     value={localSearch}
