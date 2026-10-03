@@ -153,7 +153,7 @@ const FoodMenuViewDialog = memo(({
                                     Loading related foods...
                                 </p>
                             ) : relatedFoods?.length ? (
-                                <div className="space-y-3 h-[150px] overflow-scroll">
+                                <div className="space-y-3 h-[200px] overflow-scroll">
                                     {relatedFoods.map(
                                         (relatedFood) => (
                                             <div
