@@ -113,7 +113,7 @@ const AppSidebar = React.memo(function AppSidebar() {
             >
               {/* User */}
               <SidebarMenuButton
-                tooltip={capitalizeFirstWord(user?.name ?? "User")}
+                tooltip={user?.name ?? "User"}
                 className="
                   min-w-0 flex-1 px-3
                   group-data-[collapsible=icon]:size-10
@@ -142,8 +142,8 @@ const AppSidebar = React.memo(function AppSidebar() {
                 className="
                   size-10 shrink-0 justify-center
                   text-muted-foreground
-                  hover:bg-destructive
-                  hover:text-destructive-foreground
+                  hover:bg-taupe-100
+                  hover:text-taupe-100-foreground
                   group-data-[collapsible=icon]:flex-none
                 "
               >

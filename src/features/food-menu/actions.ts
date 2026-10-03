@@ -56,7 +56,10 @@ export async function createFoodMenu(
 
         return res.data;
     } catch (err) {
-        toastNotification("Error to add", "error");
+        toastNotification('Error to add', "error");
+        if (axios.isAxiosError(err)) {
+            console.log("ERROR: ",err.response?.data.message);
+        }
         throw err;
     }
 }

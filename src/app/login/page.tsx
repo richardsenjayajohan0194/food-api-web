@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { capitalizeFirstWord } from "../../lib/utils";
 
 
 export default function LoginPage() {
@@ -17,7 +18,7 @@ export default function LoginPage() {
         const user = {
             id: 1,
             ...login,
-            name: login.email.split("@")[0],
+            name: capitalizeFirstWord(login.email.split("@")[0]),
             role: "admin",
         };
         localStorage.setItem("isAuthenticated", "true");

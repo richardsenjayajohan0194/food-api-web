@@ -135,6 +135,7 @@ const FoodMenuPagination = memo(({
                             return (
                                 <PaginationItem
                                     key={`${page}-${index}`}
+                                    className="hidden sm:block"
                                 >
                                     <PaginationLink
                                         href="#"
